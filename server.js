@@ -1,14 +1,16 @@
-
-function onRequest(request, response){
-	response.writeHead(200,{"content-type": "text/html"});
-	response.end("Generic response");
-}
-
 //*****VARIBALES GLOBALES****
 var arrayPolizasVigentes = new Array();
-
 var http = require("http");
 var server = http.createServer(onRequest);
+var url = require('url');
+
+function onRequest(request, response){
+//<!-- obteniendo id desde la url-->
+	var query = url.parse(request.url,true).query;
+   var id = query.id;//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
+   response.writeHead(200, {'Content-Type': 'text/html'});
+   response.end(id);
+}
 server.listen(4444);
 console.log("Server ON...");
 
