@@ -12,6 +12,14 @@ var server = http.createServer(onRequest);
 server.listen(4444);
 console.log("Server ON...");
 
+//<!-- Creando un objeto usuario y agregando valores-->
+var usuario = new Array();
+usuario[0] = new Object();
+usuario[0].idUsuario = "0001";
+
+usuario[1] = new Object();
+usuario[1].idUsuario = "0002";
+
 
 //<!-- Creando un objeto póliza y agregando valores-->
 var poliza = new Array();
