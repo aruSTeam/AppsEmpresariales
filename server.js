@@ -5,7 +5,9 @@ function onRequest(request, response){
 	var id = query.id;	//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
 	//var res = recuperarPolizasVigentes(id);
 	response.writeHead(200, {'Content-Type': 'text/plain'});
-	response.end(id);
+	var polizasJson = polizasVigentesJson(id);
+	console.log(polizasJson);
+	response.end(JSON.stringify(polizasJson));
 }
 
 //Metodo para recuperar las polizas vigentes, de un usuario en especifico
