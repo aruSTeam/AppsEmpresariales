@@ -4,7 +4,6 @@ function onRequest(request, response){
 	var query = url.parse(request.url,true).query;
 	var id = query.id;	//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
 	//var res = recuperarPolizasVigentes(id);
-	var polizasJson = polizasVigentesJson();
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	response.end(id);
 }
@@ -28,17 +27,19 @@ function recuperarPolizasVigentes(cedula){
     }
 }
 
-//Funcion para convertir el arrayPolizasVigentes en un Json
-function polizasVigentesJson(){
-	var jsonsPolizas = new Array();
-	var contador = 0;
-	while(arrayPolizasVigentes != null){
-		var polizaActual = {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto, 
-		"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio, "fechaFin" : arrayPolizasVigentes[contador].fechaFin, "valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado};
-		jsonsPolizas.push(polizaActual);
+function polizasVigentesJson(cedula){	
+	recuperarPolizasVigentes(cedula);
+	var stringJsonPoliza = new Array;
+	var polizaActual = new Array;
+	var jsonsPolizas = new Array;
+	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){
+			polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,			
+			"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
+			"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
+			stringJsonPoliza = JSON.stringify(polizaActual);
+			jsonsPolizas.push(stringJsonPoliza);
 	}
-	console.log(jsonsPolizas);
-
+	return jsonsPolizas;
 }
 
 var url = require('url');
@@ -116,7 +117,9 @@ poliza[5].fechaInicio = new Date(2015,3-1,13);
 poliza[5].fechaFin = new Date(2016,7-1,11);
 poliza[5].valorAsegurado = 3243000000;
 
+var polizasJson = polizasVigentesJson('0001');
 server.listen(4444);
+console.log(polizasJson);
 console.log("Server ON...");
 
 
