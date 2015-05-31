@@ -1,20 +1,49 @@
-//*****VARIBALES GLOBALES****
-var arrayPolizasVigentes = new Array();
+//Funcion ejecutada cuando se realiza una petición
+function onRequest(request, response){
+	//obteniendo id desde la url
+	var query = url.parse(request.url,true).query;
+	var id = query.id;	//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
+	var res = recuperarPolizasVigentes(id);
+	response.writeHead(200, {'Content-Type': 'text/plain'});
+	response.end(id);
+}
+
+//Metodo para recuperar las polizas vigentes, de un usuario en especifico
+function recuperarPolizasVigentes(cedula){
+	var fecha = new Date();  //Variable para recuperar el tiempo del sistema
+	var contador = 0;       //Contador para agregar los campos al arrayPolizasVigentes
+    for( i=0;  i<poliza.length; i++){    //Se recorre el arreglo de polizas
+        if(poliza[i].idUsuario === cedula){     //Se procesan solo las polizas que corresponden al usuario dado
+    //Agregamos a la variable tiempoPoliza el TimeStamp, de la fecha de vencimiento 
+    //Cantidad de segundos transcurridos desde 1970 hasta la fecha
+        	tiempoPoliza = poliza[i].fechaFin.getTime();        
+    //Pondremos el vencimiento a las 23:59 de la fecha que se tiene de vencimiento                                
+            tiempoPoliza = tiempoPoliza + 86399999;
+            if(tiempoPoliza > fecha.getTime()){                
+            	arrayPolizasVigentes[contador] = poliza[i];
+                contador++;
+            }
+        }
+    }
+}
+
+//Funcion para convertir el arrayPolizasVigentes en un Json
+function polizasVigentesJson(){
+	var jsonsPolizas = new Array();
+	var contador = 0;
+	while(arrayPolizasVigentes != null){
+		var polizaActual = {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto, 
+		"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio, "fechaFin" : arrayPolizasVigentes[contador].fechaFin, "valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado};
+		jsonsPolizas.push(polizaActual);
+	}
+}
+
+var url = require('url');
 var http = require("http");
 var server = http.createServer(onRequest);
-var url = require('url');
+var arrayPolizasVigentes = new Array();
 
-function onRequest(request, response){
-//<!-- obteniendo id desde la url-->
-	var query = url.parse(request.url,true).query;
-   var id = query.id;//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
-   response.writeHead(200, {'Content-Type': 'text/html'});
-   response.end(id);
-}
-server.listen(4444);
-console.log("Server ON...");
-
-//<!-- Creando un objeto usuario y agregando valores-->
+//Creando un objeto usuario y agregando valores
 var usuario = new Array();
 usuario[0] = new Object();
 usuario[0].idUsuario = "0001";
@@ -22,8 +51,7 @@ usuario[0].idUsuario = "0001";
 usuario[1] = new Object();
 usuario[1].idUsuario = "0002";
 
-
-//<!-- Creando un objeto pÃ³liza y agregando valores-->
+//Creando un objeto poliza y agregando valores
 var poliza = new Array();
 poliza[0] = new Object();
 poliza[0].idPoliza = "1122334455";
@@ -85,37 +113,13 @@ poliza[5].fechaInicio = new Date(2015,3-1,13);
 poliza[5].fechaFin = new Date(2016,7-1,11);
 poliza[5].valorAsegurado = 3243000000;
 
-//INICIO LOGICA DUVAN GAÑAN 30-05-2015
-//Metodo para recuperar las polizas vigentes, de un usuario en especifico
-    function recuperarPolizasVigentes(cedula){
-        var fecha = new Date();  //Variable para recuperar el tiempo del sistema
-        var tiempoPoliza;       //Variable que contendrá el tiempo de la fecha de vencimiento en formato timestamp
-        var contador = 0;       //Contador para agregar los campos al arrayPolizasVigentes
-        for( i=0;  i<poliza.length; i++)    //Se recorre el arreglo de polizas
-        {   
-            if(poliza[i].idUsuario === cedula){     //Se procesan solo las polizas que corresponden al usuario dado
-    //Agregamos a la variable tiempoPoliza el TimeStamp, de la fecha de vencimiento 
-    //Cantidad de segundos transcurridos desde 1970 hasta la fecha
-                tiempoPoliza = poliza[i].fechaFin.getTime();        
-    //Pondremos el vencimiento a las 23:59 de la fecha que se tiene de vencimiento                                
-                tiempoPoliza = tiempoPoliza + 86399999;
-                if(tiempoPoliza > fecha.getTime()){                
-                    arrayPolizasVigentes[contador] = poliza[i];
-                    contador++;
-                }
-            }        
-        }
-//FIN LOGICA DUVAN GAÑAN 30-05-2015
+server.listen(4444);
+console.log("Server ON...");
 
-//<!-- MÃ©todo para convertir el arrayPolizasVigentes en un Json-->
-function polizasVigentesJson(){
-	var jsonsPolizas = new Array();
-	var contador = 0;
-	while(arrayPolizasVigentes != null){
-		var polizaActual = {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto, 
-		"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio, "fechaFin" : arrayPolizasVigentes[contador].fechaFin, "valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado};
-		jsonsPolizas.push(polizaActual);
-	}
-} 
+
+
+
+
+ 
 
 
