@@ -7,7 +7,7 @@ function onRequest(request, response){
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	var polizasJson = polizasVigentesJson(id);
 	console.log(polizasJson);
-	response.end(JSON.stringify(polizasJson));
+	response.end(polizasJson);
 }
 
 //Metodo para recuperar las polizas vigentes, de un usuario en especifico
@@ -15,7 +15,7 @@ function recuperarPolizasVigentes(cedula){
 	var fecha = new Date();  //Variable para recuperar el tiempo del sistema
 	var contador = 0;       //Contador para agregar los campos al arrayPolizasVigentes
     for( i=0;  i<poliza.length; i++){    //Se recorre el arreglo de polizas
-        if(poliza[i].idUsuario === cedula){     //Se procesan solo las polizas que corresponden al usuario dado
+        if(poliza[i].idUsuario == cedula){     //Se procesan solo las polizas que corresponden al usuario dado
     //Agregamos a la variable tiempoPoliza el TimeStamp, de la fecha de vencimiento 
     //Cantidad de segundos transcurridos desde 1970 hasta la fecha
         	tiempoPoliza = poliza[i].fechaFin.getTime();        
@@ -35,11 +35,14 @@ function polizasVigentesJson(cedula){
 	var polizaActual = new Array;
 	var jsonsPolizas = new Array;
 	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){
+		if(arrayPolizasVigentes[contador].idUsuario == cedula){
 			polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,			
 			"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
 			"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
 			stringJsonPoliza = JSON.stringify(polizaActual);
-			jsonsPolizas.push(stringJsonPoliza);
+			jsonsPolizas = jsonsPolizas + stringJsonPoliza;
+			//jsonsPolizas.push(stringJsonPoliza);
+		}	
 	}
 	return jsonsPolizas;
 }
@@ -119,9 +122,8 @@ poliza[5].fechaInicio = new Date(2015,3-1,13);
 poliza[5].fechaFin = new Date(2016,7-1,11);
 poliza[5].valorAsegurado = 3243000000;
 
-var polizasJson = polizasVigentesJson('0001');
+
 server.listen(4444);
-console.log(polizasJson);
 console.log("Server ON...");
 
 
