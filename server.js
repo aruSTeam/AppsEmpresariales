@@ -6,8 +6,9 @@ function onRequest(request, response){
 	//var res = recuperarPolizasVigentes(id);
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	var polizasJson = polizasVigentesJson(id);
-	console.log("para la cedula " + id + "el server respondio: " + polizasJson);
-	response.end(polizasJson);
+	response.write(polizasJson);
+	response.end();
+	//response.end(polizasJson);
 }
 
 //Metodo para recuperar las polizas vigentes, de un usuario en especifico
@@ -31,17 +32,21 @@ function recuperarPolizasVigentes(cedula){
 
 function polizasVigentesJson(cedula){	
 	recuperarPolizasVigentes(cedula);
-	var stringJsonPoliza = new Array;
-	var polizaActual = new Array;
-	var jsonsPolizas = new Array;
+	var stringJsonPoliza = new Array();
+	var polizaActual = new Array();
+	var jsonsPolizas = new Array();
 	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){		
 		polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,
 				"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
 				"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
-		stringJsonPoliza = JSON.stringify(polizaActual);
-		jsonsPolizas = jsonsPolizas + stringJsonPoliza;
+		stringJsonPoliza.push(polizaActual);
 	}
-	return jsonsPolizas;
+	if(stringJsonPoliza[0] != null){
+		stringJsonPoliza = JSON.stringify(stringJsonPoliza);
+		return '{"polizas": '.concat(stringJsonPoliza).concat('}');
+	}else{
+		return  "No existen polizas con el id " + cedula;
+	}
 }
 
 var url = require('url');
@@ -112,3 +117,11 @@ poliza[5].valorAsegurado = 3243000000;
 
 server.listen(4444);
 console.log("Server ON...");
+
+
+
+
+
+ 
+
+
