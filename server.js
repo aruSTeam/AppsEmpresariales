@@ -3,7 +3,8 @@ function onRequest(request, response){
 	//obteniendo id desde la url
 	var query = url.parse(request.url,true).query;
 	var id = query.id;	//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
-	var res = recuperarPolizasVigentes(id);
+	//var res = recuperarPolizasVigentes(id);
+	var polizasJson = polizasVigentesJson();
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	response.end(id);
 }
@@ -36,6 +37,8 @@ function polizasVigentesJson(){
 		"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio, "fechaFin" : arrayPolizasVigentes[contador].fechaFin, "valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado};
 		jsonsPolizas.push(polizaActual);
 	}
+	console.log(jsonsPolizas);
+
 }
 
 var url = require('url');
