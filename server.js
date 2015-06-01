@@ -6,11 +6,8 @@ function onRequest(request, response){
 	//var res = recuperarPolizasVigentes(id);
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	var polizasJson = polizasVigentesJson(id);
-	if(polizasJson[0] != null){
-		response.write(polizasJson);	
-	}else{
-		response.write("No existen polizas para el cliente con la cedula " + id);
-	}
+	console.log(polizasJson + "para el id " + id);
+	response.write(polizasJson);	
 	response.end();
 }
 
@@ -40,16 +37,15 @@ function polizasVigentesJson(cedula){
 	var jsonsPolizas = new Array();
 	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){
 		if(arrayPolizasVigentes[contador].idUsuario == cedula){
+			console.log("EnTRO con el id "+ cedula);
 			polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,
 					"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
 					"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
 			stringJsonPoliza.push(polizaActual);
 		}
 	}
-	if(stringJsonPoliza[0] != null){
-		stringJsonPoliza = JSON.stringify(stringJsonPoliza);
-		jsonsPolizas = '{"polizas": '.concat(stringJsonPoliza).concat('}');
-	}
+	stringJsonPoliza = JSON.stringify(stringJsonPoliza);
+	jsonsPolizas = '{"polizas": '.concat(stringJsonPoliza).concat('}');
 	return jsonsPolizas;
 }
 
