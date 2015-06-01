@@ -2,7 +2,7 @@
 function onRequest(request, response){
 	var query = url.parse(request.url,true).query;
 	var id = query.id;
-	response.writeHead(200, {'Content-Type': 'application/json'});
+	response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept', 'Content-Type': 'application/json'});
 	var polizasJson = polizasVigentesJson(id);
 	response.write(polizasJson);	
 	response.end();
