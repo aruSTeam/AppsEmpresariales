@@ -1,4 +1,4 @@
-//Funcion ejecutada cuando se realiza una petición
+//Funcion ejecutada cuando se realiza una peticiÃ³n
 function onRequest(request, response){
 	//obteniendo id desde la url
 	var query = url.parse(request.url,true).query;
@@ -6,7 +6,6 @@ function onRequest(request, response){
 	//var res = recuperarPolizasVigentes(id);
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	var polizasJson = polizasVigentesJson(id);
-	console.log(polizasJson + "para el id " + id);
 	if(polizasJson[0] != null){
 		response.write(polizasJson);	
 	}else{
@@ -41,7 +40,6 @@ function polizasVigentesJson(cedula){
 	var jsonsPolizas = new Array();
 	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){
 		if(arrayPolizasVigentes[contador].idUsuario == cedula){
-			console.log("EnTRO con el id "+ cedula);
 			polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,
 					"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
 					"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
