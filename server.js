@@ -1,35 +1,30 @@
 //Funcion ejecutada cuando se realiza una petición
 function onRequest(request, response){
-	//obteniendo id desde la url
 	var query = url.parse(request.url,true).query;
-	var id = query.id;	//Para recuperar el valor de cada variable GET debemos llamar al objeto e invocar una propiedad con el mismo nombre de variable.
-	//var res = recuperarPolizasVigentes(id);
-	response.writeHead(200, {'Content-Type': 'text/plain'});
+	var id = query.id;
+	response.writeHead(200, {'Content-Type': 'application/json'});
 	var polizasJson = polizasVigentesJson(id);
-	console.log(polizasJson + "para el id " + id);
 	response.write(polizasJson);	
 	response.end();
 }
 
 //Metodo para recuperar las polizas vigentes, de un usuario en especifico
 function recuperarPolizasVigentes(cedula){
-	var fecha = new Date();  //Variable para recuperar el tiempo del sistema
-	var contador = 0;       //Contador para agregar los campos al arrayPolizasVigentes
-    for( i=0;  i<poliza.length; i++){    //Se recorre el arreglo de polizas
-        if(poliza[i].idUsuario == cedula){     //Se procesan solo las polizas que corresponden al usuario dado
-    //Agregamos a la variable tiempoPoliza el TimeStamp, de la fecha de vencimiento 
-    //Cantidad de segundos transcurridos desde 1970 hasta la fecha
-        	tiempoPoliza = poliza[i].fechaFin.getTime();        
-    //Pondremos el vencimiento a las 23:59 de la fecha que se tiene de vencimiento                                
-            tiempoPoliza = tiempoPoliza + 86399999;
-            if(tiempoPoliza > fecha.getTime()){                
-            	arrayPolizasVigentes[contador] = poliza[i];
-                contador++;
-            }
-        }
-    }
+	var fecha = new Date();
+	var contador = 0;
+    	for( i=0;  i<poliza.length; i++){
+        	if(poliza[i].idUsuario == cedula){
+        		tiempoPoliza = poliza[i].fechaFin.getTime();                                     
+            		tiempoPoliza = tiempoPoliza + 86399999;
+            		if(tiempoPoliza > fecha.getTime()){                
+            			arrayPolizasVigentes[contador] = poliza[i];
+                		contador++;
+            		}
+        	}
+    	}
 }
 
+//Funcion que convierte las polizas vigentes a JSON
 function polizasVigentesJson(cedula){	
 	recuperarPolizasVigentes(cedula);
 	var stringJsonPoliza = new Array();
@@ -37,7 +32,6 @@ function polizasVigentesJson(cedula){
 	var jsonsPolizas = new Array();
 	for(var contador = 0; contador < arrayPolizasVigentes.length; contador++){
 		if(arrayPolizasVigentes[contador].idUsuario == cedula){
-			console.log("EnTRO con el id "+ cedula);
 			polizaActual =  {"idPoliza" : arrayPolizasVigentes[contador].idPoliza, "nombreProducto" : arrayPolizasVigentes[contador].nombreProducto,
 					"fechaInicio" : arrayPolizasVigentes[contador].fechaInicio , "fechaFin":arrayPolizasVigentes[contador].fechaFin ,
 					"valorAsegurado" : arrayPolizasVigentes[contador].valorAsegurado}; 
@@ -54,7 +48,6 @@ var http = require("http");
 var server = http.createServer(onRequest);
 var arrayPolizasVigentes = new Array();
 
-//Creando un objeto usuario y agregando valores
 var usuario = new Array();
 
 usuario[0] = new Object();
@@ -63,7 +56,6 @@ usuario[0].idUsuario = "0001";
 usuario[1] = new Object();
 usuario[1].idUsuario = "0002";
 
-//Creando un objeto poliza y agregando valores
 var poliza = new Array();
 
 poliza[0] = new Object();
@@ -113,7 +105,6 @@ poliza[5].nombreProducto = "Responsabilidad Civil";
 poliza[5].fechaInicio = new Date(2015,3-1,13);
 poliza[5].fechaFin = new Date(2016,7-1,11);
 poliza[5].valorAsegurado = 3243000000;
-
 
 server.listen(4444);
 console.log("Server ON...");
